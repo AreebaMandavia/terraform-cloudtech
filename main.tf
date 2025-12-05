@@ -1,78 +1,81 @@
-provider "aws" {
-  region = "us-east-1"
-}
-
-# ---------------------
-# VPC
-# ---------------------
-resource "aws_vpc" "assignment_vpc" {
-  cidr_block = "10.0.0.0/16"
-  tags = {
-    Name = "Assignment-VPC"
+terraform {
+  required_providers {
+    null = {
+      source = "hashicorp/null"
+      version = "3.2.1"
+    }
   }
 }
 
-# ---------------------
-# Subnet
-# ---------------------
-resource "aws_subnet" "assignment_subnet" {
-  vpc_id                  = aws_vpc.assignment_vpc.id
-  cidr_block              = "10.0.1.0/24"
-  map_public_ip_on_launch = true
-
-  tags = {
-    Name = "Assignment-Subnet"
-  }
-}
+provider "null" {}
 
 # ---------------------
-# Security Group
+# Simulated VPC
 # ---------------------
-resource "aws_security_group" "assignment_sg" {
-  name        = "assignment-sg"
-  description = "Allow SSH traffic"
-  vpc_id      = aws_vpc.assignment_vpc.id
-
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+resource "null_resource" "assignment_vpc" {
+  triggers = {
+    cidr_block = "10.0.0.0/16"
+    name       = "Assignment-VPC"
   }
 
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = {
-    Name = "Assignment-SG"
+  provisioner "local-exec" {
+    command = "echo Created simulated VPC: Assignment-VPC (CIDR 10.0.0.0/16)"
   }
 }
 
 # ---------------------
-# EC2 Instance
+# Simulated Subnet
 # ---------------------
-resource "aws_instance" "demo_server" {
-  ami                    = "ami-0c2b8ca1dad447f8a"
-  instance_type          = "t2.micro"
-  subnet_id              = aws_subnet.assignment_subnet.id
-  vpc_security_group_ids = [aws_security_group.assignment_sg.id]
+resource "null_resource" "assignment_subnet" {
+  triggers = {
+    cidr_block = "10.0.1.0/24"
+    name       = "Assignment-Subnet"
+  }
 
-  tags = {
-    Name = "Assignment-EC2"
+  provisioner "local-exec" {
+    command = "echo Created simulated Subnet: Assignment-Subnet (CIDR 10.0.1.0/24)"
   }
 }
 
 # ---------------------
-# S3 Bucket
+# Simulated Security Group
 # ---------------------
-resource "aws_s3_bucket" "assignment_bucket" {
-  bucket = "assignment-storage-bucket-areeba"
-  tags = {
-    Name = "Assignment-S3"
+resource "null_resource" "assignment_sg" {
+  triggers = {
+    name        = "assignment-sg"
+    description = "Allow SSH traffic"
+  }
+
+  provisioner "local-exec" {
+    command = "echo Created simulated Security Group: assignment-sg (SSH allowed)"
+  }
+}
+
+# ---------------------
+# Simulated EC2 Instance
+# ---------------------
+resource "null_resource" "demo_server" {
+  triggers = {
+    ami           = "ami-simulated"
+    instance_type = "t2.micro"
+    name          = "Assignment-EC2"
+  }
+
+  provisioner "local-exec" {
+    command = "echo Launched simulated EC2 Instance: Assignment-EC2 (t2.micro)"
+  }
+}
+
+# ---------------------
+# Simulated S3 Bucket
+# ---------------------
+resource "null_resource" "assignment_bucket" {
+  triggers = {
+    name = "assignment-storage-bucket-areeba"
+  }
+
+  provisioner "local-exec" {
+    command = "echo Created simulated S3 Bucket: assignment-storage-bucket-areeba"
   }
 }
 
@@ -80,9 +83,9 @@ resource "aws_s3_bucket" "assignment_bucket" {
 # OUTPUTS
 # ---------------------
 output "ec2_public_ip" {
-  value = aws_instance.demo_server.public_ip
+  value = "203.0.113.10 (simulated)"
 }
 
 output "s3_bucket_name" {
-  value = aws_s3_bucket.assignment_bucket.bucket
+  value = "assignment-storage-bucket-areeba"
 }
