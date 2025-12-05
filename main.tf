@@ -19,7 +19,7 @@ resource "null_resource" "assignment_vpc" {
   }
 
   provisioner "local-exec" {
-    command = "echo Created simulated VPC: Assignment-VPC (CIDR 10.0.0.0/16)"
+    command = "echo 'Created simulated VPC: Assignment-VPC (CIDR 10.0.0.0/16)'"
   }
 }
 
@@ -33,7 +33,7 @@ resource "null_resource" "assignment_subnet" {
   }
 
   provisioner "local-exec" {
-    command = "echo Created simulated Subnet: Assignment-Subnet (CIDR 10.0.1.0/24)"
+    command = "echo 'Created simulated Subnet: Assignment-Subnet (CIDR 10.0.1.0/24)'"
   }
 }
 
@@ -47,7 +47,7 @@ resource "null_resource" "assignment_sg" {
   }
 
   provisioner "local-exec" {
-    command = "echo Created simulated Security Group: assignment-sg (SSH allowed)"
+    command = "echo 'Created simulated Security Group: assignment-sg (SSH allowed)'"
   }
 }
 
@@ -62,7 +62,7 @@ resource "null_resource" "demo_server" {
   }
 
   provisioner "local-exec" {
-    command = "echo Launched simulated EC2 Instance: Assignment-EC2 (t2.micro)"
+    command = "echo 'Launched simulated EC2 Instance: Assignment-EC2 (t2.micro)'"
   }
 }
 
@@ -75,7 +75,7 @@ resource "null_resource" "assignment_bucket" {
   }
 
   provisioner "local-exec" {
-    command = "echo Created simulated S3 Bucket: assignment-storage-bucket-areeba"
+    command = "echo 'Created simulated S3 Bucket: assignment-storage-bucket-areeba'"
   }
 }
 
